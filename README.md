@@ -1,2 +1,46 @@
-# ai-architecture-portfolio
-Design production-grade AI systems: LLMs, RAG, agents, security and evaluation, from whiteboard to enterprise
+# AI Architecture Portfolio
+
+Coursework and capstone for the **AI Architecture Design** course (MLOps MENA Academy, Oct–Dec 2026).
+
+## Scenario
+
+**Tawreed** is a B2B wholesale marketplace in Egypt. Small retailers such as groceries,
+kiosks and mini-markets use the mobile app to reorder stock from distributors. Distributors and the marketing team work from a web dashboard.
+
+**Nabd** is the marketing automation system inside Tawreed. Each night it scores every retailer
+and picks the offer that fits them best. An agent then writes the push notification for that
+offer, and it can only use offers the distributor has approved. A few cases can't wait until
+the next night, like an abandoned cart, so simple rules handle those within minutes.
+
+The scenario is made up for this course.
+
+| Goal | Target |
+| --- | --- |
+| **G1** Repeat orders | Monthly reordering retailers +15% vs a holdout group |
+| **G2** Relevance & trust | Retailer CSAT 60% → 80%; opt-out rate ≤ 1% per campaign |
+| **G3** Cost | Marketing cost per incremental order −25% (LLM + push) |
+| **G4** Compliance | Zero messages with a price or discount the distributor didn't approve; PDPL-compliant |
+
+## Assumptions (not verified yet)
+
+- ~20,000 active retailers and ~150 distributors
+- Tawreed already runs on PostgreSQL, so Nabd reuses it instead of adding a new database (see ADR-0003)
+- ~70% of retailers have push notifications turned on
+- Most orders are weekly or biweekly reorders of the same SKUs
+- Personal data can be processed in an in-country (or counsel-approved) cloud region
+
+## How to read this repo
+
+| Folder | Contents |
+| --- | --- |
+| [docs/](docs/) | One document per session. Start with the latest one |
+| [diagrams/](diagrams/) | draw.io sources and exported PNGs |
+| [adr/](adr/) | One file per architecture decision, numbered across the whole course |
+| [capstone/](capstone/) | Final architecture document and slides |
+| [tools/](tools/) | Checks that run in CI |
+
+## Sessions
+
+| # | Topic | Deliverable |
+| --- | --- | --- |
+| 01 | Architecture views, steps & process | [Governance pack](docs/01-governance-pack.md) · [diagram](diagrams/src/01-governance-architecture.drawio) · [ADR 0001–0003](adr/) |
