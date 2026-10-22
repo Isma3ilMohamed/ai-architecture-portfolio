@@ -8,14 +8,14 @@ retailer (segment, churn risk) and picks the best offer for them. An agent orche
 plans each message, retrieves the approved offer and past campaigns from pgvector, asks the LLM
 for a draft through `LLMClient`, and passes the draft to an Offer Validator before a marketer
 approves it. Simple rules cover the few cases that can't wait for the night, like an abandoned
-cart. The Tawreed mobile app and the web dashboard sit outside Nabd. Retailers get offers as push
-notifications in the app; distributors and marketers work from the dashboard.
+cart. The mobile app
+and the dashboard sit outside Nabd.
 
 **Goals.** G1 repeat orders +15% · G2 CSAT from 60% to 80%, opt-out under 1% · G3 cost per
 incremental order down 25% · G4 no unapproved prices, PDPL compliant
 
 **Diagram.** [`01-governance-architecture.drawio`](../diagrams/src/01-governance-architecture.drawio)
-([PNG](../diagrams/src/01-governance-architecture.png))
+([PNG](../diagrams/src/export/01-governance-architecture.png))
 
 ---
 
@@ -31,9 +31,6 @@ incremental order down 25% · G4 no unapproved prices, PDPL compliant
 **Why P4 uses a holdout.** Counting orders placed after a message always looks good, because most
 retailers would have reordered anyway. P4 only counts the difference between retailers who got the
 message and the 10% who didn't. If that difference is zero, the campaign is costing money.
-
-**P1 and P3 share one mechanism.** Prices are filled into the message from the database and names
-are placeholders, so the LLM never sees either. The same template design covers both principles.
 
 ## 2 · ADRs
 
@@ -63,8 +60,8 @@ exceptions in the same area block the release.
 
 **PDPL.** Egypt's Personal Data Protection Law (Law No. 151 of 2020) requires a permit to transfer
 personal data outside the country. P3 keeps personal data away from the LLM vendor. Firebase Cloud
-Messaging still receives a device token with each message, so it needs a data processing agreement. The executive
-regulations have been slow to come out, so the current procedure should be checked with a lawyer.
+Messaging still receives a device token with each message, so it needs a data processing agreement. Confirm the current
+procedure with a lawyer.
 
 **Runtime triggers.**
 
@@ -75,8 +72,10 @@ regulations have been slow to come out, so the current procedure should be check
 | Uplift vs holdout | ≤ 0 for 2 weeks | Retire or redesign the campaign (P4) | Growth lead |
 | Cost per incremental order | over target 3 days running | Cost review; model-tier audit (G3) | Platform engineer |
 
-## 4 · Automated guardrail (optional)
+## 4 · Automated guardrails (optional)
 
-[`tools/arch_lint.py`](../tools/arch_lint.py) runs in CI on every push and pull request. The build
-fails if an ADR is missing one of the required sections (Status, Context, Options, Decision,
-Consequences, Revisit when) or doesn't reference at least one principle (P1 to P4).
+Three checks run in GitHub Actions on every push:
+
+- [`tools/arch_lint.py`](../tools/arch_lint.py) fails the build if an ADR is missing a required section or cites no principle, if a principle in this pack doesn't appear in the diagram, or if this page grows past two pages.
+- The diagram's PNG is exported from the `.drawio` file automatically, so the picture can't drift from the source.
+- Every link in the markdown files is checked.
