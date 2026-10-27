@@ -2,9 +2,11 @@
 
 Checks:
 1. Every ADR has the required sections and cites at least one principle.
-2. The diagram and the pack agree: every principle in the pack appears in the
-   diagram, and every ADR referenced anywhere has a file in adr/.
-3. The governance pack stays within the two-page limit set by the assignment.
+2. The Session 1 diagram shows every principle defined in the pack.
+3. Every ADR referenced in docs/, diagrams/ or the README has a file in adr/,
+   and every ADR in adr/ is referenced from at least one of them.
+4. Every session SDD (docs/NN-sdd.md) has the course template's sections.
+5. The governance pack stays within the two-page limit set by the assignment.
 """
 import html
 import pathlib
@@ -15,6 +17,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 PACK = ROOT / "docs" / "01-governance-pack.md"
 DIAGRAM = ROOT / "diagrams" / "src" / "01-governance-architecture.drawio"
 REQUIRED_SECTIONS = ["## Context", "## Options", "## Decision", "## Consequences", "## Revisit when"]
+SDD_SECTIONS = ["Problem", "Goals and non-goals", "Assumptions", "Context viewpoint",
+                "Deployment viewpoint", "Data viewpoint", "Concurrency viewpoint", "Operation viewpoint"]
 PRINCIPLE_REF = re.compile(r"\bP[1-9]\b")
 PRINCIPLE_DEF = re.compile(r"^\| \*\*(P[1-9])\*\* \|", re.MULTILINE)
 ADR_REF = re.compile(r"\bADR-(\d{4})\b")
@@ -34,8 +38,15 @@ def check_adrs(adr_files: list[pathlib.Path]) -> list[str]:
     return problems
 
 
+def referencing_sources() -> list[tuple[str, str]]:
+    """Every file outside adr/ that may mention an ADR: docs, diagrams and the README."""
+    files = sorted((ROOT / "docs").glob("*.md")) + sorted((ROOT / "diagrams" / "src").glob("*.drawio"))
+    files.append(ROOT / "README.md")
+    return [(str(f.relative_to(ROOT)), html.unescape(f.read_text(encoding="utf-8"))) for f in files]
+
+
 def check_consistency(adr_files: list[pathlib.Path]) -> list[str]:
-    """The pack, the diagram and adr/ must reference the same principles and decisions."""
+    """The pack and diagram agree on principles; ADR references point at real files and back."""
     pack = PACK.read_text(encoding="utf-8")
     diagram = html.unescape(DIAGRAM.read_text(encoding="utf-8"))
     problems = []
@@ -48,13 +59,26 @@ def check_consistency(adr_files: list[pathlib.Path]) -> list[str]:
             problems.append(f"principle {p} is defined in the pack but not shown in the diagram")
 
     existing = {f.name[:4] for f in adr_files}
-    for source, text in (("diagram", diagram), ("pack", pack)):
-        for num in sorted(set(ADR_REF.findall(text))):
-            if num not in existing:
-                problems.append(f"{source} references ADR-{num} but adr/{num}-*.md does not exist")
-    for num in sorted(existing):
-        if f"ADR-{num}" not in diagram and f"{num}" not in pack:
-            problems.append(f"ADR-{num} is not referenced by the pack or the diagram")
+    sources = referencing_sources()
+    referenced = set()
+    for name, text in sources:
+        refs = set(ADR_REF.findall(text)) | set(re.findall(r"adr/(\d{4})-", text))
+        referenced |= refs
+        for num in sorted(refs - existing):
+            problems.append(f"{name} references ADR-{num} but adr/{num}-*.md does not exist")
+    for num in sorted(existing - referenced):
+        problems.append(f"ADR-{num} is not referenced from docs/, diagrams/ or the README")
+    return problems
+
+
+def check_sdds() -> list[str]:
+    """Each session SDD keeps the viewpoint structure of the course template."""
+    problems = []
+    for sdd in sorted((ROOT / "docs").glob("[0-9][0-9]-sdd.md")):
+        headings = [line for line in sdd.read_text(encoding="utf-8").splitlines() if line.startswith("#")]
+        for section in SDD_SECTIONS:
+            if not any(section.lower() in h.lower() for h in headings):
+                problems.append(f"{sdd.name}: no heading for '{section}'")
     return problems
 
 
@@ -67,10 +91,10 @@ def check_pack_length() -> list[str]:
 
 def main() -> int:
     adr_files = sorted((ROOT / "adr").glob("[0-9][0-9][0-9][0-9]-*.md"))
-    problems = check_adrs(adr_files) + check_consistency(adr_files) + check_pack_length()
+    problems = check_adrs(adr_files) + check_consistency(adr_files) + check_sdds() + check_pack_length()
     for problem in problems:
         print(f"FAIL {problem}")
-    print(f"Checked {len(adr_files)} ADR(s), the pack and the diagram: {'FAILED' if problems else 'OK'}")
+    print(f"Checked {len(adr_files)} ADR(s), the docs and the diagrams: {'FAILED' if problems else 'OK'}")
     return 1 if problems else 0
 
 
