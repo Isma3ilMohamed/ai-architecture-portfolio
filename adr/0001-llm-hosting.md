@@ -1,7 +1,7 @@
 # ADR-0001: LLM hosting
 
 ```
-Status:  Accepted
+Status:  Accepted (amended 2026-10-26)
 Session: 1 (governance pack)
 Date:    2026-10-22
 ```
@@ -53,6 +53,22 @@ P3 (tokenize before any call) and P4 (cost per call) into one component's job.
 
 Monthly LLM spend exceeds the cost of a dedicated GPU node **and** an open-weight model scores
 within 5 points of the current model on our copy eval set.
+
+## Amendments
+
+**2026-10-26 (Session 2): fallback and evaluation.**
+
+- **Fallback provider.** `LLMClient` wraps the primary provider in a circuit breaker. When it
+  opens, requests go to the *same model* served by a second provider, not to a smaller model,
+  so copy quality and eval results carry over. A smaller model would pass the outage and fail
+  the eval set.
+- **Provider SLA.** Each provider's SLA has to be at least as strong as the one we promise for
+  the send path. A provider at 98% under a 99.9% target breaks the target by design.
+- **Dead-letter queue.** Drafts that still fail go to a dead-letter queue and are replayed before
+  the 09:00 approval window. A draft is never silently dropped.
+- **Judge model.** The copy eval uses LLM-as-judge with a different, stronger model than the one
+  writing drafts, plus a weekly sample read by Arabic reviewers. A model grading its own output
+  tends to defend it.
 
 ## Related
 
