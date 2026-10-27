@@ -1,7 +1,7 @@
 # ADR-0003: Vector store
 
 ```
-Status:  Accepted
+Status:  Accepted (amended by ADR-0004, 2026-10-26)
 Session: 1 (governance pack)
 Date:    2026-10-22
 ```
@@ -46,6 +46,19 @@ Only catalog and campaign text is embedded, never retailer PII (P3).
 ## Revisit when
 
 The index grows beyond ~5M vectors, or p95 retrieval exceeds 200 ms.
+
+## Amendments
+
+**2026-10-26 (Session 2): where the store lives, and Qdrant.**
+
+- The store is now Nabd's own Postgres, fed by change data capture ([ADR-0004](0004-own-analytical-store.md)),
+  not Tawreed's operational database. The decision above still holds: the catalog and campaign
+  text arrive through CDC and are embedded in our store.
+- We also considered **Qdrant**, a dedicated vector database that the course instructor
+  recommends for production because each data store then has one job. At ~50k SKUs it would add
+  a second store and a second sync path without a gain we can measure yet. pgvector stays, and
+  the `VectorStore` interface keeps a move to Qdrant a one-component change. Qdrant is the target
+  if the revisit trigger below fires.
 
 ## Related
 

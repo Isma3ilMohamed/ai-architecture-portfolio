@@ -21,10 +21,19 @@ The scenario is made up for this course.
 | **G3** Cost | Marketing cost per incremental order −25% (LLM + push) |
 | **G4** Compliance | Zero messages with a price or discount the distributor didn't approve; PDPL-compliant |
 
+## Non-goals for v1
+
+- WhatsApp or SMS. Push only
+- A real-time ML model per event (see ADR-0002)
+- One LLM draft per retailer. Drafts are per segment and offer; names and prices go into template slots
+- Ranking the home page inside the Tawreed app. Nabd decides what to push, not what the app shows
+
 ## Assumptions (not verified yet)
 
 - ~20,000 active retailers and ~150 distributors
-- Tawreed already runs on PostgreSQL, so Nabd reuses it instead of adding a new database (see ADR-0003)
+- Nabd keeps its own Postgres, filled by change data capture from Tawreed's orders database. It never
+  queries Tawreed's operational database (see ADR-0004)
+- ~30 people use Nabd's dashboard screens at once on a normal day, ~80 at Ramadan and Eid peaks
 - ~70% of retailers have push notifications turned on
 - Most orders are weekly or biweekly reorders of the same SKUs
 - Personal data can be processed in an in-country (or counsel-approved) cloud region
@@ -44,3 +53,4 @@ The scenario is made up for this course.
 | # | Topic | Deliverable |
 | --- | --- | --- |
 | 01 | Architecture views, steps & process | [Governance pack](docs/01-governance-pack.md) · [diagram](diagrams/src/01-governance-architecture.drawio) · [ADR 0001–0003](adr/) |
+| 02 | AI system building blocks | [Software design document](docs/02-sdd.md) · [diagram](diagrams/src/02-data-deployment.drawio) · [ADR 0004](adr/0004-own-analytical-store.md) |
