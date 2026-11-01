@@ -53,4 +53,4 @@ The scenario is made up for this course.
 | # | Topic | Deliverable |
 | --- | --- | --- |
 | 01 | Architecture views, steps & process | [Governance pack](docs/01-governance-pack.md) · [diagram](diagrams/src/01-governance-architecture.drawio) · [ADR 0001–0003](adr/) |
-| 02 | AI system building blocks | [Software design document](docs/02-sdd.md) · [diagram](diagrams/src/02-data-deployment.drawio) · [ADR 0004](adr/0004-own-analytical-store.md) |
+| 02 | AI system building blocks | [Software design document](docs/02-sdd.md) · [diagram](diagrams/src/02-data-deployment.drawio) · [cold start flow](docs/02-cold-start-flow.md) · [ADR 0004](adr/0004-own-analytical-store.md) |

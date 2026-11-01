@@ -168,7 +168,8 @@ sequenceDiagram
   Send->>Send: consent and holdout check
 ```
 
-After four weeks of orders the retailer gets real features and moves to the normal path.
+After four weeks of orders the retailer gets real features and moves to the normal path. The full flow view,
+with the options compared and a latency budget, is in [02-cold-start-flow.md](02-cold-start-flow.md).
 
 **Abandoned cart.** No LLM on this path ([ADR-0002](../adr/0002-nba-batch-vs-realtime.md)).
 
