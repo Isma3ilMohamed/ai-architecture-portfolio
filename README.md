@@ -57,4 +57,4 @@ The scenario is made up for this course.
 | 01 | Architecture views, steps & process | [Governance pack](docs/01-governance-pack.md) · [diagram](diagrams/src/01-governance-architecture.drawio) · [ADR 0001–0003](adr/) |
 | 02 | AI system building blocks | [Software design document](docs/02-sdd.md) · [diagram](diagrams/src/02-data-deployment.drawio) · [cold start flow](docs/02-cold-start-flow.md) · [ADR 0004](adr/0004-own-analytical-store.md) |
 | 03 | Use-case flows: training and inference | [Components viewpoint in the SDD](docs/02-sdd.md#7-components-viewpoint) · [ADR 0005](adr/0005-guardrail-scanning.md) · ADR 0001 amended |
-| 04 | RAG chatbot | [Nabd Assist design](docs/04-rag-chatbot.md) · [ADR 0006](adr/0006-rag-chatbot.md) |
+| 04 | RAG chatbot | [Nabd Assist design](docs/04-rag-chatbot.md) · [mini project notes](docs/04-rag-mini-project.md) · [diagram](diagrams/src/04-rag-chatbot.drawio) · [ADR 0006](adr/0006-rag-chatbot.md) |

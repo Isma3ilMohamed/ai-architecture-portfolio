@@ -1,7 +1,9 @@
 # Nabd Assist: retailer questions answered from Tawreed's documents
 
 **Session 4 · RAG chatbot · Ismail Mohamed · 2026-11-26** ·
-Decision: [ADR-0006](../adr/0006-rag-chatbot.md)
+Decision: [ADR-0006](../adr/0006-rag-chatbot.md) · Diagram:
+[`04-rag-chatbot.drawio`](../diagrams/src/04-rag-chatbot.drawio) · Mini-project notes:
+[04-rag-mini-project.md](04-rag-mini-project.md)
 
 ## 1. Use case
 
@@ -84,9 +86,9 @@ sequenceDiagram
   participant L as LLMClient
   R->>GW: question (JWT)
   GW->>A: question + retailer id from the token
+  A->>A: intent gate (small classifier), small talk gets a fixed reply here
   A->>G: scan question (PII, injection)
   G-->>A: pass, or blocked: fixed reply
-  A->>A: route by intent
   A->>T: order status or offer price for this retailer id
   T-->>A: rows
   A->>L: embed question (same model as the index)
@@ -104,7 +106,7 @@ The diagram shows every branch at once. Each message takes one of them:
 
 | Intent | Path | Model calls |
 | --- | --- | --- |
-| Greeting or small talk | Fixed reply: "I'm Tawreed's assistant for orders, offers and policies" | None |
+| Greeting or small talk | Fixed reply: "I'm Tawreed's assistant for orders, offers and policies" | Intent only |
 | Order status, price, stock | Lookup tool, answer from a template with slots (P1) | Intent and guard only |
 | Policy or terms question | Retrieval, re-rank, generate | Full path |
 | Complaint, legal threat, payment dispute | Handoff to support with the transcript | Intent and guard only |
@@ -150,8 +152,8 @@ running the evaluation set, not by guessing.
 | Step | Budget |
 | --- | --- |
 | Gateway and routing | 100 ms |
-| Guard scan, question | 400 ms |
 | Intent detection | 300 ms |
+| Guard scan, question | 400 ms |
 | Embed question and search | 150 ms |
 | Re-rank | 250 ms |
 | Generate (short answer, up to about 120 words) | 3.5 s |
