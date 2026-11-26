@@ -7,7 +7,9 @@ not rewritten: later changes go in an `## Amendments` section or a new ADR.
 
 | ADR | Decision | Status |
 | --- | --- | --- |
-| [0001](0001-llm-hosting.md) | LLM hosting | Accepted, amended in Session 2 |
+| [0001](0001-llm-hosting.md) | LLM hosting | Accepted, amended in Sessions 2 and 3 |
 | [0002](0002-nba-batch-vs-realtime.md) | Next-best-action: batch vs real-time | Accepted |
 | [0003](0003-vector-store.md) | Vector store | Accepted, amended by 0004 |
 | [0004](0004-own-analytical-store.md) | Own analytical store, fed by CDC | Accepted |
+| [0005](0005-guardrail-scanning.md) | Guardrail scanning around every LLM call | Accepted |
+| [0006](0006-rag-chatbot.md) | Retailer questions answered by RAG | Accepted |
