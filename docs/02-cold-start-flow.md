@@ -43,7 +43,9 @@ writes the message: it is a pre-approved template with offer slots (P1, P2).
   (nothing to store yet), vector DB (no user vector), the agent and the LLM.
 - **Missing from the high-level view:** a small serving table for the defaults (the CDP isn't meant
   for request-time reads), a consent service (push opt-in at sign-up, PDPL), a first-week
-  frequency cap, and the rule that moves a retailer to personal ranking.
+  frequency cap, and the rule that moves a retailer to personal ranking. All four are now in the
+  SDD: the components table and the cold start flows in section 7, and the tunable values in
+  section 11.
 
 **Latency budget (P95)**
 

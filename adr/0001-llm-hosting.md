@@ -1,7 +1,7 @@
 # ADR-0001: LLM hosting
 
 ```
-Status:  Accepted (amended 2026-10-26)
+Status:  Accepted (amended 2026-10-26, 2026-11-04)
 Session: 1 (governance pack)
 Date:    2026-10-22
 ```
@@ -69,6 +69,23 @@ within 5 points of the current model on our copy eval set.
 - **Judge model.** The copy eval uses LLM-as-judge with a different, stronger model than the one
   writing drafts, plus a weekly sample read by Arabic reviewers. A model grading its own output
   tends to defend it.
+
+**2026-11-04 (Session 3): self-hosted small model, revisited.**
+
+The course design self-hosts a small open-weight model (Qwen 14B on vLLM) and fine-tunes a LoRA
+adapter every week on past messages and their outcomes. We looked at the same setup for Nabd and
+kept Option C for now:
+
+- **Volume.** About 300 drafts a night. A GPU node would be busy for minutes and idle the rest of
+  the day, and vLLM needs at least one warm replica because loading 14B weights takes minutes.
+- **No training data yet.** A LoRA adapter learns from messages that were sent and what happened
+  next (opened, ordered). Nabd has none of that at launch. Langfuse traces and the holdout results
+  (P4) are where it will come from.
+- **The guard and the judge stay separate models** either way ([ADR-0005](0005-guardrail-scanning.md)).
+
+Added revisit trigger: after three months of send outcomes, compare a LoRA adapter on an
+open-weight model against the current model on the copy eval set. If it is within 5 points and
+the monthly spend crosses the cost of a scale-to-zero GPU node, move drafting in-country.
 
 ## Related
 
