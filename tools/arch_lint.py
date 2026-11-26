@@ -18,7 +18,7 @@ PACK = ROOT / "docs" / "01-governance-pack.md"
 DIAGRAM = ROOT / "diagrams" / "src" / "01-governance-architecture.drawio"
 REQUIRED_SECTIONS = ["## Context", "## Options", "## Decision", "## Consequences", "## Revisit when"]
 SDD_SECTIONS = ["Problem", "Goals and non-goals", "Assumptions", "Context viewpoint",
-                "Deployment viewpoint", "Data viewpoint", "Concurrency viewpoint", "Operation viewpoint"]
+                "Components viewpoint", "Deployment viewpoint", "Data viewpoint", "Concurrency viewpoint", "Operation viewpoint"]
 PRINCIPLE_REF = re.compile(r"\bP[1-9]\b")
 PRINCIPLE_DEF = re.compile(r"^\| \*\*(P[1-9])\*\* \|", re.MULTILINE)
 ADR_REF = re.compile(r"\bADR-(\d{4})\b")
